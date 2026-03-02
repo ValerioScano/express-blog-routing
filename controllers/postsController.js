@@ -10,8 +10,11 @@ function index(req, res) {
 }
 
 function show(req, res) {
-    selectedPizza = postsList.find(pizza => pizza.id == Number(req.params.id))
-    res.json(selectedPizza)
+    const selectedPost = postsList.find(post => post.id == Number(req.params.id))
+    if (!selectedPost) {
+        return res.status(404).json({ errore: "Not Found", message: "Post non trovato" })
+    }
+    res.json(selectedPost)
 }
 
 function store(req, res) {
@@ -26,9 +29,12 @@ function destroy(req, res) {
     // console.log(postsList)
 
     // opzione B
-    selectedPizza = postsList.find(pizza => pizza.id == Number(req.params.id))
-    seletedPizzaID = postsList.indexOf(selectedPizza)
-    postsList.splice(selectedPizzaID, 1)
+    const selectedPost = postsList.find(post => post.id == Number(req.params.id))
+    const selectedPostID = postsList.indexOf(selectedPost)
+    if (!selectedPost) {
+        return res.status(404).json({ errore: "Not Found", message: "Post non trovato" })
+    }
+    postsList.splice(selectedPostID, 1)
     console.log(postsList)
     res.sendStatus(204)
 }
