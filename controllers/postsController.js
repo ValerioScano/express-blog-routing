@@ -3,11 +3,15 @@ const postsList = require("../public/blog-assets/immagini_e_post/posts")
 let workAroundPostsList = postsList
 
 function index(req, res) {
-    res.json(postsList)
+    if (req.query.tag) {
+        workAroundPostsList = postsList.filter(post => post.tags.includes(req.query.tag));
+    }
+    res.json(workAroundPostsList)
 }
 
 function show(req, res) {
-    res.json(postsList[req.params.id])
+    selectedPizza = postsList.find(pizza => pizza.id == Number(req.params.id))
+    res.json(selectedPizza)
 }
 
 function store(req, res) {
@@ -22,10 +26,9 @@ function destroy(req, res) {
     // console.log(postsList)
 
     // opzione B
-
-    toBeDeletedPizza = postsList.find(pizza => pizza.id == Number(req.params.id))
-    toBeDeletedPizzaID = postsList.indexOf(toBeDeletedPizza)
-    postsList.splice(toBeDeletedPizzaID, 1)
+    selectedPizza = postsList.find(pizza => pizza.id == Number(req.params.id))
+    seletedPizzaID = postsList.indexOf(selectedPizza)
+    postsList.splice(selectedPizzaID, 1)
     console.log(postsList)
     res.sendStatus(204)
 }
