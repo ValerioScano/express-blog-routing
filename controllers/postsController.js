@@ -18,7 +18,21 @@ function show(req, res) {
 }
 
 function store(req, res) {
-    res.send("Creato nuovo post")
+
+    console.log(req.body)
+    const NewId = postsList.length + 1
+
+    const newItem = {
+        id: NewId,
+        title: req.body.title,
+        content: req.body.content,
+        image: req.body.image,
+        tags: req.body.tags,
+    }
+    console.log(newItem)
+    postsList.push(newItem)
+    console.log(postsList)
+    res.status(201).send("La risorsa è stata correttamente creata")
 }
 
 function destroy(req, res) {
@@ -39,11 +53,27 @@ function destroy(req, res) {
     res.sendStatus(204)
 }
 
+
+function update(req, res) {
+
+    const selectedItem = postsList.find(item => item.id == req.params.id);
+
+    selectedItem.title = req.body.title,
+        selectedItem.content = req.body.content,
+        selectedItem.image = req.body.image,
+        selectedItem.tags = req.body.tags,
+
+        console.log(selectedItem)
+    console.log(postsList)
+    res.status(200).send("La risorsa è stata correttamente modificata")
+}
+
 const funzioniController = {
     index,
     show,
     store,
     destroy,
+    update,
 }
 
 module.exports = funzioniController

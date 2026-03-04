@@ -5,6 +5,7 @@ const postsRouter = require("./routers/apiCallForPosts")
 
 
 app.use(express.static("public"));
+app.use(express.json());
 
 app.get("/", (req, res) => {
     res.send("Benvenuto nei Post!")
