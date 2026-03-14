@@ -1,39 +1,50 @@
-const postsList = require("../public/blog-assets/immagini_e_post/posts")
+const connection = require("../data/db")
 
-let workAroundPostsList = postsList
 
 function index(req, res) {
-    if (req.query.tag) {
-        workAroundPostsList = postsList.filter(post => post.tags.includes(req.query.tag));
-    }
-    res.json(workAroundPostsList)
+
+    const sql = "SELECT * FROM posts"
+
+    connection.query(sql, (err, rows) => {
+        if (err) {
+            return res.status(500).json({ errore: "DB ERROR", message: "Errore nel recuperare dati dal DB" })
+        }
+
+        let results = rows
+
+        // if (req.query.tag) {
+        //     results = rows.filter(post => post.tag.includes(req.query.tag))
+        // }
+
+        res.json(results)
+    })
 }
 
-function show(req, res) {
-    const selectedPost = postsList.find(post => post.id == Number(req.params.id))
-    if (!selectedPost) {
-        return res.status(404).json({ errore: "Not Found", message: "Post non trovato" })
-    }
-    res.json(selectedPost)
-}
+// function show(req, res) {
+//     const selectedPost = postsList.find(post => post.id == Number(req.params.id))
+//     if (!selectedPost) {
+//         return res.status(404).json({ errore: "Not Found", message: "Post non trovato" })
+//     }
+//     res.json(selectedPost)
+// }
 
-function store(req, res) {
+// function store(req, res) {
 
-    console.log(req.body)
-    const NewId = postsList.length + 1
+//     console.log(req.body)
+//     const NewId = postsList.length + 1
 
-    const newItem = {
-        id: NewId,
-        title: req.body.title,
-        content: req.body.content,
-        image: req.body.image,
-        tags: req.body.tags,
-    }
-    console.log(newItem)
-    postsList.push(newItem)
-    console.log(postsList)
-    res.status(201).send("La risorsa è stata correttamente creata")
-}
+//     const newItem = {
+//         id: NewId,
+//         title: req.body.title,
+//         content: req.body.content,
+//         image: req.body.image,
+//         tags: req.body.tags,
+//     }
+//     console.log(newItem)
+//     postsList.push(newItem)
+//     console.log(postsList)
+//     res.status(201).send("La risorsa è stata correttamente creata")
+// }
 
 function destroy(req, res) {
     // opzione A
@@ -43,37 +54,37 @@ function destroy(req, res) {
     // console.log(postsList)
 
     // opzione B
-    const selectedPost = postsList.find(post => post.id == Number(req.params.id))
-    const selectedPostID = postsList.indexOf(selectedPost)
-    if (!selectedPost) {
-        return res.status(404).json({ errore: "Not Found", message: "Post non trovato" })
-    }
-    postsList.splice(selectedPostID, 1)
-    console.log(postsList)
-    res.sendStatus(204)
+    // const selectedPost = postsList.find(post => post.id == Number(req.params.id))
+    // const selectedPostID = postsList.indexOf(selectedPost)
+    // if (!selectedPost) {
+    //     return res.status(404).json({ errore: "Not Found", message: "Post non trovato" })
+    // }
+    // postsList.splice(selectedPostID, 1)
+    // console.log(postsList)
+    // res.sendStatus(204)
 }
 
 
-function update(req, res) {
+// function update(req, res) {
 
-    const selectedItem = postsList.find(item => item.id == req.params.id);
+//     const selectedItem = postsList.find(item => item.id == req.params.id);
 
-    selectedItem.title = req.body.title,
-        selectedItem.content = req.body.content,
-        selectedItem.image = req.body.image,
-        selectedItem.tags = req.body.tags,
+//     selectedItem.title = req.body.title,
+//         selectedItem.content = req.body.content,
+//         selectedItem.image = req.body.image,
+//         selectedItem.tags = req.body.tags,
 
-        console.log(selectedItem)
-    console.log(postsList)
-    res.status(200).send("La risorsa è stata correttamente modificata")
-}
+//         console.log(selectedItem)
+//     console.log(postsList)
+//     res.status(200).send("La risorsa è stata correttamente modificata")
+// }
 
 const funzioniController = {
     index,
-    show,
-    store,
+    // show,
+    // store,
     destroy,
-    update,
+    // update,
 }
 
 module.exports = funzioniController
