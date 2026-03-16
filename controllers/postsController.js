@@ -56,23 +56,24 @@ function show(req, res) {
     })
 }
 
-// function store(req, res) {
+function store(req, res) {
+    const { title, content, image } = req.body
 
-//     console.log(req.body)
-//     const NewId = postsList.length + 1
+    if (!title || !content) {
+        return res.status(400).json({ error: "Inserting error", message: "Mancano titolo o contenuto del post da inserire" })
+    }
 
-//     const newItem = {
-//         id: NewId,
-//         title: req.body.title,
-//         content: req.body.content,
-//         image: req.body.image,
-//         tags: req.body.tags,
-//     }
-//     console.log(newItem)
-//     postsList.push(newItem)
-//     console.log(postsList)
-//     res.status(201).send("La risorsa è stata correttamente creata")
-// }
+    const sql = "INSERT INTO posts (title, content, image) VALUES (?, ?, ?)"
+    const parametriQuery = [title, content, image]
+
+    dbConnection.query(sql, parametriQuery, (error, results) => {
+        if (error) {
+            console.log(error)
+            return res.status(500).json({ error: "Cannot insert post", message: "Impossibile inserire il post" })
+        }
+        return res.status(201).json({ id: results.insertId })
+    })
+}
 
 function destroy(req, res) {
 
@@ -127,7 +128,7 @@ function destroy(req, res) {
 const funzioniController = {
     index,
     show,
-    // store,
+    store,
     destroy,
     // update,
 }

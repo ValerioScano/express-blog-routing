@@ -11,7 +11,7 @@ router.get("/:id", funzioniController.show)
 
 // store
 
-// router.post("/", funzioniController.store)
+router.post("/", funzioniController.store)
 
 // update
 
