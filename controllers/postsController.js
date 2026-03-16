@@ -59,8 +59,8 @@ function show(req, res) {
 function store(req, res) {
     const { title, content, image } = req.body
 
-    if (!title || !content) {
-        return res.status(400).json({ error: "Inserting error", message: "Mancano titolo o contenuto del post da inserire" })
+    if (!title || !content || !image) {
+        return res.status(400).json({ error: "Inserting error", message: "Mancano titolo, contenuto o immagine del post da inserire" })
     }
 
     const sql = "INSERT INTO posts (title, content, image) VALUES (?, ?, ?)"
@@ -111,26 +111,35 @@ function destroy(req, res) {
 }
 
 
-// function update(req, res) {
+function update(req, res) {
+    const id = Number(req.params.id)
+    if (isNaN(id)) {
+        return res.status(400).json({ error: "user error", message: "id non valido" })
+    }
+    const { title, content, image } = req.body;
+    if (!title || !content || !image) {
+        return res.status(400).json({ error: "Inserting error", message: "Mancano titolo, contenuto o immagine del post da aggiornare" })
+    }
+    const sql = "UPDATE posts SET title = ?, content = ?, image = ? WHERE id = ?"
 
-//     const selectedItem = postsList.find(item => item.id == req.params.id);
-
-//     selectedItem.title = req.body.title,
-//         selectedItem.content = req.body.content,
-//         selectedItem.image = req.body.image,
-//         selectedItem.tags = req.body.tags,
-
-//         console.log(selectedItem)
-//     console.log(postsList)
-//     res.status(200).send("La risorsa è stata correttamente modificata")
-// }
+    dbConnection.query(sql, [title, content, image, id], (error, results) => {
+        if (error) {
+            console.log(error)
+            return res.status(500).json({ error: "Query error", message: "Impossibile modificare il post" })
+        }
+        if (results.affectedRows === 0) {
+            return res.status(404).json({ error: "Not found", message: "Impossibile modificare una risorsa non esistente" })
+        }
+        return res.status(200).json({ message: "Risorsa modificata con successo" })
+    })
+}
 
 const funzioniController = {
     index,
     show,
     store,
     destroy,
-    // update,
+    update,
 }
 
 module.exports = funzioniController

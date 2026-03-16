@@ -15,7 +15,7 @@ router.post("/", funzioniController.store)
 
 // update
 
-// router.put("/:id", funzioniController.update)
+router.put("/:id", funzioniController.update)
 
 // modify
 
