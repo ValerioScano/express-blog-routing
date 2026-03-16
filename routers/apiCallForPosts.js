@@ -7,7 +7,7 @@ router.get("/", funzioniController.index)
 
 // show
 
-// router.get("/:id", funzioniController.show)
+router.get("/:id", funzioniController.show)
 
 // store
 
